@@ -1,46 +1,76 @@
-import Head from 'next/head';
-import Layout, { siteTitle } from '../components/layout';
-import utilStyles from '../styles/utils.module.css';
-import { getSortedPostsData } from '../lib/posts';
-import Link from 'next/link';
-import Date from '../components/date';
+// pages/index.js
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-export default function Home({ allPostsData }) {
-  return (
-    <Layout home>
-      <Head>
-        <title>{siteTitle}</title>
-      </Head>
-      <section className={utilStyles.headingMd}>
-        <p>MSA - the wonderful comrade</p>
-        <p>
-          (This is Abu Alafia prototype website - you’ll be building a site like this in{' '}
-          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
-        </p>
-      </section>
-      <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
-        <h2 className={utilStyles.headingLg}>Blog</h2>
-        <ul className={utilStyles.list}>
-          {allPostsData.map(({ id, date, title }) => (
-            <li className={utilStyles.listItem} key={id}>
-              <Link href={`/posts/${id}`}>{title}</Link>
-              <br />
-              <small className={utilStyles.lightText}>
-                <Date dateString={date} />
-              </small>
-            </li>
-          ))}
-        </ul>
-      </section>
-    </Layout>
-  );
-}
+export default function Home() {
+  const [email, setEmail] = useState('');
+  const [dropdown1, setDropdown1] = useState('');
+  const [dropdown2, setDropdown2] = useState('');
+  const [textarea, setTextarea] = useState('');
+  const router = useRouter();
 
-export async function getStaticProps() {
-  const allPostsData = getSortedPostsData();
-  return {
-    props: {
-      allPostsData,
-    },
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Redirect to the success page with form data as query parameters
+    router.push({
+      pathname: '/success',
+      query: { email, dropdown1, dropdown2, textarea },
+    });
   };
+
+  return (
+    <div>
+      <h1>Simple Form</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="dropdown1">Dropdown 1:</label>
+          <select
+            id="dropdown1"
+            value={dropdown1}
+            onChange={(e) => setDropdown1(e.target.value)}
+            required
+          >
+            <option value="" disabled>Select an option</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="dropdown2">Dropdown 2:</label>
+          <select
+            id="dropdown2"
+            value={dropdown2}
+            onChange={(e) => setDropdown2(e.target.value)}
+            required
+          >
+            <option value="" disabled>Select an option</option>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+            <option value="option3">Option 3</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="textarea">Text Area:</label>
+          <textarea
+            id="textarea"
+            value={textarea}
+            onChange={(e) => setTextarea(e.target.value)}
+            required
+          ></textarea>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  );
 }
