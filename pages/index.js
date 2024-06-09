@@ -128,7 +128,7 @@ export default function Home() {
     .catch(error => {
         console.error('There was a problem with the POST request:', error);
         setLoading(false);
-        setAlertMessage('There was a problem uploading the file')
+        setAlertMessage('There was a problem uploading the file: ' + error)
         setAlertType('error')
         apiOK = false;
     });
