@@ -61,7 +61,8 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
-    const uploadOk = handleUpload();
+    // const uploadOk = handleUpload();
+    const uploadOk = true;
     if (!uploadOk) {
       console.error('There was a problem with the file upload', error);
       return
@@ -97,7 +98,7 @@ export default function Home() {
     const credentials = {service_id: process.env.NEXT_PUBLIC_serviceId,template_id:
     process.env.NEXT_PUBLIC_templateID, user_id: process.env.NEXT_PUBLIC_userId, template_params: formData}
     console.log("credentials"+JSON.stringify(credentials))
-    /* commenting out Email send to try to fix deployment on external domain
+    /* commenting out Email send to try to fix deployment on external domain*/
     fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -133,7 +134,7 @@ export default function Home() {
         setAlertType('error')
         apiOK = false;
     });
-    */
+    /* end comment email out */
     const sendBtn = document.getElementById("sendBtn");
 
     if (apiOK) {
