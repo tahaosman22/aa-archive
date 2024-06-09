@@ -95,8 +95,10 @@ export default function Home() {
     newFormData.uploadDate = datetime;
     console.log("Sending Data:", formData);
     const apiUrl = 'https://api.emailjs.com/api/v1.0/email/send'; // Replace with the actual API endpoint
-    const credentials = {service_id: process.env.NEXT_PUBLIC_serviceId,template_id:
-    process.env.NEXT_PUBLIC_templateID, user_id: process.env.NEXT_PUBLIC_userId, template_params: formData}
+    // const credentials = {service_id: process.env.NEXT_PUBLIC_serviceId,template_id:
+    // process.env.NEXT_PUBLIC_templateID, user_id: process.env.NEXT_PUBLIC_userId, template_params: formData}
+    const credentials = {service_id: 'service_93s6k34',template_id:
+      'template_09d92fm', user_id: 'NqeQ0wa502xNx91Zq', template_params: formData}
     console.log("credentials"+JSON.stringify(credentials))
     /* commenting out Email send to try to fix deployment on external domain*/
     fetch(apiUrl, {
