@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    const sizeLimit = 1000 * 1024; // 10KB in bytes
+    const sizeLimit = 100 * 1000 * 1024; // 10KB in bytes
   
     if (selectedFile.size > sizeLimit) {
       setAlertMessage('File size exceeds the 1000KB limit.');
@@ -394,13 +394,13 @@ function generate(string_1, string_2) {
             </div>
             
             <p></p>
-            <div className="justify-center">
+            <div className="justify-center w-3/4 m-auto">
               <button
                 type="submit"
-                className="w-full py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
+                className="px-2 py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
                 id='sendBtn'
               >
-                  (upload to drive) اضغط لإرسال المحتوى
+                  (content upload) اضغط لإرسال المحتوى
               </button>
             </div>
           </div>
