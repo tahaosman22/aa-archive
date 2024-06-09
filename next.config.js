@@ -1,4 +1,4 @@
-module.exports = {
-    basePath: '/aarchive',
-}
+//module.exports = {
+//    basePath: '/aarchive',
+//}
 

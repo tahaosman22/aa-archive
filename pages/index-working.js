@@ -48,10 +48,10 @@ export default function Home() {
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    const sizeLimit = 100 * 1000 * 1024; // 10KB in bytes
+    const sizeLimit = 1000 * 1024; // 10KB in bytes
   
     if (selectedFile.size > sizeLimit) {
-      setAlertMessage('File size exceeds the 100MB limit.');
+      setAlertMessage('File size exceeds the 1000KB limit.');
       setAlertType('error');
       setFile(null); // Reset the file input
     } else {
@@ -269,30 +269,35 @@ function generate(string_1, string_2) {
       >
         
         {/* <div className='text-[50px]'>helo</div> */}
-
         <div className="flex-1 p-10 text-right text-gray-700">
+          <h1 className="pb-2 text-3xl text-center font-latoBold">ذكرى ابو العافية</h1>
+          <p className="text-lg text-center text-gray-500">
+              *يرجى تعبئة كل البيانات  للانتقال لصفحة تحميل المحتوى*
+          </p>
+        <div className='flex fileUpload'>
+        <input 
+          type="file"
+          className="w-full p-2 pt-3 pl-3 text-right border-2 border-gray-500 focus:border-teal-500 focus:ring-teal-500"
+          id="dropdown2"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          required
+        >
+          </input>
+          <div className='bg-[#14B8A6] rounded p-[0px] h-[100px] w-[150px] '>
+                <img src='/images/MSA.png' className='bg-white bg-gradient-to-l from-[#14B8A6] to-white-100 w-full h-full'></img>
 
-          <div className='flex justify-end firstSection'>
-              {/* Image */}
-              <div className='bg-[#14B8A6] rounded py-1 p-[3px] w-1/4 h-fit mt-[0px]'>
-                <img src='/images/MSA.png' className='bg-white bg-gradient-to-r from-[#14B8A6] to-white-100'></img>
               </div>
-              <div className="justify-end w-full pb-4 ">
-                <br></br>
-                <h1 className="pb-2 text-3xl text-center font-latoBold">ذكرى ابو العافية</h1>
-                <p className="text-lg text-center text-gray-500">
-                  *يرجى تعبئة كل البيانات لتحميل المحتوى*
-                </p>
-              </div>
-          </div>
+        </div>
           {/* <img src='/images/MSA.jpg' className=' m-auto h-[50px]'></img> */}
 
           <div className="mt-6 ">
             <div className='flex justify-end firstSection'>
-              <div className='small-boxes px-[10px] w-full  justify-end'>
+              <div className='small-boxes px-[10px] w-4/6  justify-end'>
+
                 {/* Email input field */}
                 <div className="pb-4">
-                  <label htmlFor="email">Your email (البريد)</label>
+                  <label htmlFor="email">Email address (البريد)</label>
                   <br></br>
                   <input                  
                     className="w-full p-2 text-right border-2 border-gray-500 rounded-md focus:border-teal-500 focus:ring-teal-500"
@@ -305,22 +310,7 @@ function generate(string_1, string_2) {
                   />
                 </div>
                 <p></p>
-                {/* File upload field */}
-                <div className="justify-end w-full pb-4 ">
-                <label htmlFor="fileUpload">اختيار الملف</label>
-                    <br></br>
-                  <input 
-                    type="file"
-                    className="w-full p-2 pt-3 pl-3 text-left border-2 border-gray-500 rounded-md focus:border-teal-500 focus:ring-teal-500"
-                    id="fileUpload"
-                    ref={fileInputRef}
-                    onChange={handleFileChange}
-                    required
-                  >
-                  </input>
 
-                </div>
-                <p></p>
                 {/* Classification input field */}
                   <div className="justify-end w-full pb-4 ">
                     <label htmlFor="dropdown1">التصنيف</label>
@@ -378,6 +368,9 @@ function generate(string_1, string_2) {
                   </div>
                   <p></p>
               </div>
+
+
+
             </div>
             {/* Comment input field */}
             <div className="pb-5">
@@ -394,18 +387,15 @@ function generate(string_1, string_2) {
             </div>
             
             <p></p>
-            <div className="justify-center w-3/4 m-auto">
-              <button
-                type="submit"
-                className="px-2 py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
-                id='sendBtn'
-              >
-                  (content upload) اضغط لإرسال المحتوى
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
+              id='sendBtn'
+            >
+               (Google Drive) اضغط للانتقال إلى صفحة إرسال المحتوى
+            </button>
           </div>
         </div>
-        
       </form>
       <div id="response" className="mt-4 text-center"></div>
     </main>
