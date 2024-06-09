@@ -1,3 +1,4 @@
 module.exports = {
-    basePath: '/aaarchive',
+    basePath: '/aarchive',
 }
+
