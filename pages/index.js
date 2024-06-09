@@ -61,8 +61,8 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
-    // const uploadOk = handleUpload();
-    const uploadOk = true;
+    const uploadOk = handleUpload();
+    // const uploadOk = true;
     if (!uploadOk) {
       console.error('There was a problem with the file upload', error);
       return

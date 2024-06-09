@@ -18,7 +18,10 @@ export const config = {
 };
 
 async function getAccessToken() {
-    const { CLIENT_ID, CLIENT_SECERET, REFRESH_TOKEN } = process.env;
+    // const { CLIENT_ID, CLIENT_SECERET, REFRESH_TOKEN } = process.env;
+    const CLIENT_ID = '280530405500-p5srectvnjlcivq54k45o4cqsabeu6vo.apps.googleusercontent.com';
+    const CLIENT_SECERET = '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';
+    const REFRESH_TOKEN = '1//04EtbxP2HTDjyCgYIARAAGAQSNwF-L9Ir24OFNrnCXtVQ9lGoSfb68tRpGUiogeEQ4uo3wSGu4LkwIo-mPLFXLMx8rXn6FFhwWGU';
     const oauth2Client = new google.auth.OAuth2(
       CLIENT_ID,
       CLIENT_SECERET
