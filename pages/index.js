@@ -97,6 +97,7 @@ export default function Home() {
     const credentials = {service_id: process.env.NEXT_PUBLIC_serviceId,template_id:
     process.env.NEXT_PUBLIC_templateID, user_id: process.env.NEXT_PUBLIC_userId, template_params: formData}
     console.log("credentials"+JSON.stringify(credentials))
+    /*
     fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -132,7 +133,7 @@ export default function Home() {
         setAlertType('error')
         apiOK = false;
     });
-
+    */
     const sendBtn = document.getElementById("sendBtn");
 
     if (apiOK) {
