@@ -16,7 +16,7 @@ export default function Home() {
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
-  const [link, setLink] = useState('')
+  const [link, setLink] = useState('1pPbrwo1T-8o7rdJQaOH1SYYbtG598ut6')
   const [message, setMessage] = useState('')
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
@@ -67,6 +67,88 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
+    if (Object.values(formData).some(x => x === '')) {
+      setAlertMessage('Please fill in all fields');
+      setAlertType('error');
+      return
+    }
+
+    setLoading('true')
+
+    // Fetch call to send formData
+    var currentdate = new Date(); 
+    var datetime =  currentdate.getDate() + "/"
+                    + (currentdate.getMonth()+1)  + "/" 
+                    + currentdate.getFullYear() + " @ "  
+                    + currentdate.getHours() + ":"  
+                    + currentdate.getMinutes() + ":" 
+                    + currentdate.getSeconds();
+    //setFormData.uploadDate(datetime)
+    let apiOK = true;
+    const newFormData = formData;
+    newFormData.uploadDate = datetime;
+    console.log("Sending Data:", formData);
+    const apiUrl = 'https://api.emailjs.com/api/v1.0/email/send'; // Replace with the actual API endpoint
+    // const credentials = {service_id: process.env.NEXT_PUBLIC_serviceId,template_id:
+    // process.env.NEXT_PUBLIC_templateID, user_id: process.env.NEXT_PUBLIC_userId, template_params: formData}
+    const credentials = {service_id: 'service_93s6k34',template_id:
+      'template_09d92fm', user_id: 'NqeQ0wa502xNx91Zq', template_params: formData}
+    console.log("credentials"+JSON.stringify(credentials))
+    /* commenting out Email send to try to fix deployment on external domain*/
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    })
+    .then(response => {
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}` + response);
+        }
+        return response.text();
+
+    })
+    .then(text => {
+      try {
+            const data = JSON.parse(text);
+            // setLoading(false)
+            // setAlertMessage('Form submitted successfully!');
+            // setAlertType('success');
+            document.getElementById('response').textContent = data.response;
+            // router.push(`/success?email=${encodeURIComponent(formData.email)}`);
+        } catch (err) {
+            // setLoading(false)
+            // setAlertMessage('Form submitted successfully!');
+            // setAlertType('success');
+        }
+    })
+    .catch(error => {
+        console.error('There was a problem with the POST request:', error);
+        setLoading(false);
+        setAlertMessage('There was a problem uploading the file: ' + error)
+        setAlertType('error')
+        apiOK = false;
+    });
+    /* end comment email out */
+
+    setFormData({
+      uploadDate: null,
+      email: '',
+      classification: 'سيرة',
+      media: 'نص',
+      comment: '',
+      folderId: ''
+    })
+    window.open(link
+    
+    )
+  }
+
+
+  const handleSubmitOld = (e) => {
     const uploadOk = handleUploadInternaly();
     // const uploadOk = true;
     if (!uploadOk) {
@@ -395,7 +477,7 @@ function generate(string_1, string_2) {
 
     <main className=" items-center   justify-end px-10 py-[10px] ">
       {/* <UploadFile/> */}
-      <CustomAlert message={alertMessage} type={alertType} onClose={() => setAlertMessage('')} loading={loading} />
+      {/* <CustomAlert message={alertMessage} type={alertType} onClose={() => setAlertMessage('')} loading={loading} /> */}
       
       <form 
         className="bg-white my-[10px] flex rounded-lg md:w-2/5 w-full font-latoRegular max-h-[97%]"
@@ -418,11 +500,12 @@ function generate(string_1, string_2) {
                 <p className="text-lg text-center text-gray-500">
                   *يرجى تعبئة كل البيانات لتحميل المحتوى*
                 </p>
+                {/* <p className="text-sm text-center text-gray-500">NOTE: ON SUBMISSION ONLY UPLOAD ONE FILE TO THE DRIVE PER FORM SUBMISSION</p> */}
               </div>
           </div>
           {/* <img src='/images/MSA.jpg' className=' m-auto h-[50px]'></img> */}
 
-          <div className="mt-6 ">
+          <div className="mt-4 ">
             <div className='flex justify-end firstSection'>
               <div className='small-boxes px-[10px] w-full  justify-end'>
                 {/* Email input field */}
@@ -439,8 +522,9 @@ function generate(string_1, string_2) {
                     required
                   />
                 </div>
-                <p></p>
                 {/* File upload field */}
+    {/*
+                <p></p>
                 <div className="justify-end w-full pb-4 ">
                 <label htmlFor="fileUpload">اختيار الملف</label>
                     <br></br>
@@ -455,6 +539,7 @@ function generate(string_1, string_2) {
                   </input>
 
                 </div>
+     */}
                 <p></p>
                 {/* Classification input field */}
                   <div className="justify-end w-full pb-4 ">
@@ -530,6 +615,7 @@ function generate(string_1, string_2) {
             
             <p></p>
             <div className="justify-center w-3/4 m-auto">
+
               <button
                 type="submit"
                 className="px-2 py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
@@ -538,6 +624,7 @@ function generate(string_1, string_2) {
                   (content upload) اضغط لإرسال المحتوى
               </button>
             </div>
+            {/* <p className="mt-2 text-sm text-center text-gray-500">NOTE: ON SUBMISSION ONLY UPLOAD ONE FILE TO THE DRIVE PER FORM SUBMISSION</p> */}
           </div>
         </div>
         
@@ -546,3 +633,4 @@ function generate(string_1, string_2) {
     </main>
   );
 }
+
