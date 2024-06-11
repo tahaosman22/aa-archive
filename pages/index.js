@@ -1,14 +1,18 @@
 // pages/index.js
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
+
+// import fs from 'fs';
+
 import { Heading, Button, Html } from "@react-email/components";
 import Image from 'next/image';
 import UploadFile from './UploadFile';
 import CustomAlert from './CustomAlert';
-
-
+// import { application } from 'express';
+import {upload} from '@vercel/blob/client';
 
 export default function Home() {
+  
   const [file, setFile] = useState(null);
   const fileInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
@@ -18,6 +22,8 @@ export default function Home() {
   const [alertType, setAlertType] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const [blob, setBlob] = useState(null);
+  
 
 
   const [formData, setFormData] = useState({
@@ -48,7 +54,7 @@ export default function Home() {
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
-    const sizeLimit = 100 * 1000 * 1024; // 10KB in bytes
+    const sizeLimit = 1000 * 1000 * 1024; // 10KB in bytes
   
     if (selectedFile.size > sizeLimit) {
       setAlertMessage('File size exceeds the 100MB limit.');
@@ -61,7 +67,7 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
-    const uploadOk = handleUpload();
+    const uploadOk = handleUploadInternaly();
     // const uploadOk = true;
     if (!uploadOk) {
       console.error('There was a problem with the file upload', error);
@@ -118,15 +124,15 @@ export default function Home() {
     .then(text => {
       try {
             const data = JSON.parse(text);
-            setLoading(false)
-            setAlertMessage('Form submitted successfully!');
-            setAlertType('success');
+            // setLoading(false)
+            // setAlertMessage('Form submitted successfully!');
+            // setAlertType('success');
             document.getElementById('response').textContent = data.response;
             // router.push(`/success?email=${encodeURIComponent(formData.email)}`);
         } catch (err) {
-            setLoading(false)
-            setAlertMessage('Form submitted successfully!');
-            setAlertType('success');
+            // setLoading(false)
+            // setAlertMessage('Form submitted successfully!');
+            // setAlertType('success');
         }
     })
     .catch(error => {
@@ -161,6 +167,113 @@ export default function Home() {
 
 };
 
+const handleUploadInternaly = async () => {
+  if (!file) {
+    alert('Please select a file first.');
+    return uploadOk;
+  }
+  setUploading(true);
+
+  try {
+    setAlertMessage('Requesting Access...')
+
+      // Step 1: Get access token from API
+      const tokenResponse = await fetch('/api/token', {
+        method: 'GET',
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error('Failed to get access token');
+      }
+
+      const data = await tokenResponse.json();
+      const accessToken = data.accessToken;
+      alert(accessToken);    
+      console.log(accessToken);
+
+      setAlertMessage('Creating Buffer');
+
+      const response = await fetch(
+        `/api/blob?filename=${file.name}`,
+        {
+          method: 'POST',
+          body: file,
+        },
+      );
+
+      const newBlob = (await response.json());
+      console.log(newBlob);
+      const url = newBlob.url;
+      // const vercelResponse = await fetch(url);
+      // const fileBuffer = await vercelResponse.buffer();
+
+      setAlertMessage('Uploading to Drive');
+
+      // google upload
+      const metadata = {
+        // name: originalFilename, // File name at Google Drive
+        // mimeType: mimetype, // Mime type at Google Drive
+        // parents: [folderId], // Folder ID at Google Drive
+        // description: JSON.stringify(_fields)
+
+        name: file.originalFilename, // File name at Google Drive
+        mimeType: file.mimetype, // Mime type at Google Drive
+        parents: [formData.folderId], // Folder ID at Google Drive
+        description: JSON.stringify({    email: formData.email,
+        classification: formData.classification,
+        media: formData.media,
+        description: formData.comment})
+      };
+  
+      alert(JSON.stringify({
+        fileUrl: url,
+        fileName: file.name,
+        mimeType: file.type,
+        folderId: formData.folderId, // Replace with actual folder ID
+        metadata: metadata,
+        accessToken: accessToken
+    }))
+      const googleResponse = await fetch('api/google', {
+        method: 'POST',
+        headers: new Headers({
+          'Authorization': 'Bearer ' + accessToken,
+        }),
+        body: JSON.stringify({
+          fileUrl: url,
+          fileName: file.name,
+          mimeType: file.type,
+          folderId: formData.folderId, // Replace with actual folder ID
+          metadata: metadata,
+          accessToken: accessToken,
+      })
+  })
+      const jsonResponse = await googleResponse.json();
+      if (!googleResponse.ok) {
+        setAlertType('error')
+        setAlertMessage('Failed to Upload to Drive');
+        throw new Error('Failed to upload to drive');
+      }
+      console.log('File uploaded:', jsonResponse);
+      console.log('to folder:'+formData.folderId)
+      console.log(file.name)
+      // Step 4: Delete file from Vercel Blob
+      const deleteResponse = await fetch(`/api/delete?url=${url}`, {
+        method: 'DELETE',
+      });
+      setLoading(false)
+      setAlertType('success')
+      setAlertMessage('File Uploaded Successfully');
+
+      if (!deleteResponse.ok) {
+        throw new Error('Failed to delete blob from Vercel Blob storage');
+      }
+
+  } catch (error) {
+    console.error('Error uploading file:', error);
+
+  }
+};
+
 const handleUpload = async () => {
   let uploadOk = false;
 
@@ -169,19 +282,37 @@ const handleUpload = async () => {
     return uploadOk;
   }
 
+  try{
+  //   const newBlob = await upload(file.name, file, {
+  //     access: 'public',
+  //     handleUploadUrl: '/api/url'
+  //   });
+  //   setBlob(newBlob)
+
+    // const response = await fetch('api/url', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({blob: newBlob})
+    // })
+    // const {signedUrl} = await response.json();
+
+  console.log('------------------------------>'+signedUrl)
   const uploadFormData = new FormData();
   uploadFormData.append('file', file);
   uploadFormData.append('_fields', JSON.stringify(formData));
-  try {
+  // uploadFormData.append('signedUrl', signedUrl)
+
     setUploading(true);
-    const response = await fetch('/api/upload', {
+    const response2 = await fetch('/api/upload', {
       method: 'POST',
       body: uploadFormData,
     });
 
-    const result = await response.json();
+    const result = await response2.json();
     if (result.success) {
-      setMessage('File uploaded successfully! File ID: ' + result.data.id);
+      setMessage('File uploaded successfully!' + result);
       uploadOk = true;
     } else {
       setMessage('Error uploading file: ' + result.error);

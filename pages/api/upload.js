@@ -19,9 +19,9 @@ export const config = {
 
 async function getAccessToken() {
     // const { CLIENT_ID, CLIENT_SECERET, REFRESH_TOKEN } = process.env;
-    const CLIENT_ID = '280530405500-p5srectvnjlcivq54k45o4cqsabeu6vo.apps.googleusercontent.com';
-    const CLIENT_SECERET = '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';
-    const REFRESH_TOKEN = '1//04EtbxP2HTDjyCgYIARAAGAQSNwF-L9Ir24OFNrnCXtVQ9lGoSfb68tRpGUiogeEQ4uo3wSGu4LkwIo-mPLFXLMx8rXn6FFhwWGU';
+    const CLIENT_ID = process.env.CLIENT_ID;
+    const CLIENT_SECRET = process.env.CLIENT_SECRET;
+    const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
     const oauth2Client = new google.auth.OAuth2(
       CLIENT_ID,
       CLIENT_SECERET
@@ -42,7 +42,11 @@ export default async function handler(req, res) {
     return;
   }
 
-  const form = formidable();
+  // const form = formidable();
+
+  const form = new formidable.IncomingForm({
+    maxFileSize: 500 * 1024 * 1024, // 500 MB
+  });
 
 
   form.parse(req, async (err, fields, files) => {
