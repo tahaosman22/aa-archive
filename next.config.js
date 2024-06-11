@@ -1,15 +1,7 @@
-//module.exports = {
-//    basePath: '/aarchive',
-//}
+// module.exports = {
+//     basePath: '/aaarchive',
+//     images: {
+//         domains: ['letsenhance.io'],
+//       }
+// }
 
-// next.config.js
-module.exports = {
-    api: {
-      bodyParser: false,
-    },
-    webpack: (config) => {
-      // Further configuration if needed
-      return config;
-    },
-  };
-  
