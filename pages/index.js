@@ -67,6 +67,7 @@ export default function Home() {
   };
 
   const handleSubmit = (e) => {
+    // alert('clicked')
     e.preventDefault(); // Prevent default form submission behavior
 
     if (Object.values(formData).some(x => x === '')) {
@@ -142,9 +143,8 @@ export default function Home() {
       comment: '',
       folderId: ''
     })
-    window.open(link
-    
-    )
+    setLink('1pPbrwo1T-8o7rdJQaOH1SYYbtG598ut6');
+    window.open(link, '_self')
   }
 
 
@@ -481,7 +481,7 @@ function generate(string_1, string_2) {
       
       <form 
         className="bg-white my-[10px] flex rounded-lg md:w-2/5 w-full font-latoRegular max-h-[97%]"
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
         
       >
         
@@ -616,13 +616,23 @@ function generate(string_1, string_2) {
             <p></p>
             <div className="justify-center w-3/4 m-auto">
 
-              <button
+              {/* <button
                 type="submit"
                 className="px-2 py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
                 id='sendBtn'
               >
                   (content upload) اضغط لإرسال المحتوى
-              </button>
+              </button> */}
+              <a href={link}>
+                <button
+                onClick={handleSubmit}
+                className="px-2 py-2 text-lg text-white bg-teal-500 rounded-lg font-latoBold"
+                id='sendBtn'
+              >
+                  (content upload) اضغط لإرسال المحتوى
+              </button> 
+                
+                </a>
             </div>
             {/* <p className="mt-2 text-sm text-center text-gray-500">NOTE: ON SUBMISSION ONLY UPLOAD ONE FILE TO THE DRIVE PER FORM SUBMISSION</p> */}
           </div>
