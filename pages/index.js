@@ -242,7 +242,7 @@ function generate(string_1, string_2) {
                   {/* <div className='w-full bg-black h-[80px]'></div> */}
 
                   <div className="w-full pb-4 ">
-                    <label htmlFor="dropdown2" className='whitespace-nowrap'>تاريخ المحتوى الجديد </label>
+                    <label htmlFor="dropdown2" className='whitespace-nowrap'>تاريخ حدوث المحتوى (الصورة مثلا)</label>
                     <br></br>
                     <input 
                       type="date"
